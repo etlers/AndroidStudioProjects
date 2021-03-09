@@ -1,7 +1,10 @@
 package com.etlers.sustta
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,26 +30,26 @@ class MainActivity : AppCompatActivity() {
     var player2 = 0
 
     var whatuArray = intArrayOf(
-        R.drawable.whatu_128_kernel_01_1,
-        R.drawable.whatu_128_kernel_01_2,
-        R.drawable.whatu_128_kernel_02_1,
-        R.drawable.whatu_128_kernel_02_2,
-        R.drawable.whatu_128_kernel_03_1,
-        R.drawable.whatu_128_kernel_03_2,
-        R.drawable.whatu_128_kernel_04_1,
-        R.drawable.whatu_128_kernel_04_2,
-        R.drawable.whatu_128_kernel_05_1,
-        R.drawable.whatu_128_kernel_05_2,
-        R.drawable.whatu_128_kernel_06_1,
-        R.drawable.whatu_128_kernel_06_2,
-        R.drawable.whatu_128_kernel_07_1,
-        R.drawable.whatu_128_kernel_07_2,
-        R.drawable.whatu_128_kernel_08_1,
-        R.drawable.whatu_128_kernel_08_2,
-        R.drawable.whatu_128_kernel_09_1,
-        R.drawable.whatu_128_kernel_09_2,
-        R.drawable.whatu_128_kernel_10_1,
-        R.drawable.whatu_128_kernel_10_2
+            R.drawable.whatu_99_kernel_01_1,
+            R.drawable.whatu_99_kernel_01_2,
+            R.drawable.whatu_99_kernel_02_1,
+            R.drawable.whatu_99_kernel_02_2,
+            R.drawable.whatu_99_kernel_03_1,
+            R.drawable.whatu_99_kernel_03_2,
+            R.drawable.whatu_99_kernel_04_1,
+            R.drawable.whatu_99_kernel_04_2,
+            R.drawable.whatu_99_kernel_05_1,
+            R.drawable.whatu_99_kernel_05_2,
+            R.drawable.whatu_99_kernel_06_1,
+            R.drawable.whatu_99_kernel_06_2,
+            R.drawable.whatu_99_kernel_07_1,
+            R.drawable.whatu_99_kernel_07_2,
+            R.drawable.whatu_99_kernel_08_1,
+            R.drawable.whatu_99_kernel_08_2,
+            R.drawable.whatu_99_kernel_09_1,
+            R.drawable.whatu_99_kernel_09_2,
+            R.drawable.whatu_99_kernel_10_1,
+            R.drawable.whatu_99_kernel_10_2
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,10 +68,10 @@ class MainActivity : AppCompatActivity() {
         ivPlayer1 = findViewById(R.id.ivPlayer1)
         ivPlayer2 = findViewById(R.id.ivPlayer2)
 
-        ivDealer1.setImageResource(R.drawable.back_128)
-        ivDealer2.setImageResource(R.drawable.back_128)
-        ivPlayer1.setImageResource(R.drawable.back_128)
-        ivPlayer2.setImageResource(R.drawable.back_128)
+        ivDealer1.setImageResource(R.drawable.back_99)
+        ivDealer2.setImageResource(R.drawable.back_99)
+        ivPlayer1.setImageResource(R.drawable.back_99)
+        ivPlayer2.setImageResource(R.drawable.back_99)
 
         tvPlayaer1 = findViewById(R.id.tvDelaer)
         tvPlayaer2 = findViewById(R.id.tvPlayer)
@@ -77,13 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         // 버튼 클릭
         btnDeal.setOnClickListener {
-            // 이미지 섞기
-            for(i in 0..9 step 1) {
-                rotateImage(ivDealer1)
-                rotateImage(ivPlayer1)
-                rotateImage(ivDealer2)
-                rotateImage(ivPlayer2)
-            }
             // 각 화투 숫자 가져오기
             var dealerWhatu1 = random.nextInt(whatuArray.size)
             var dealerWhatu2 = random.nextInt(whatuArray.size)
@@ -108,6 +104,11 @@ class MainActivity : AppCompatActivity() {
             setWhatuImage(playerWhatu1, ivPlayer1)
             setWhatuImage(dealerWhatu2, ivDealer2)
             setWhatuImage(playerWhatu2, ivPlayer2)
+            // 이미지 섞기
+            rotateImage(ivDealer1)
+            rotateImage(ivPlayer1)
+            rotateImage(ivDealer2)
+            rotateImage(ivPlayer2)
             // 딜러 기준 정의
             var dealerDdang = false
             var dealerCalc1 = dealerWhatu1 / 2 + 1
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             var dealerSum = dealerCalc1 + dealerCalc2
             // 4, 14이면 삼팔광
             if ((dealerWhatu1 == 4 && dealerWhatu2 == 14) || (dealerWhatu2 == 4 && dealerWhatu1 == 14)) {
-                tvDelaer.setText("딜러: 삼팔광땡!!")
+                tvDelaer.setText("딜러: 삼!팔!광!땡!!")
                 ivDealerResult.setImageResource(R.drawable.winner)
                 ivPlayerResult.setImageResource(R.drawable.loser)
             } else if (dealerCalc1 == dealerCalc2) {
@@ -138,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             var playerSum = playerCalc1 + playerCalc2
             // 4, 14이면 삼팔광
             if ((playerWhatu1 == 4 && playerWhatu2 == 14) || (playerWhatu2 == 4 && playerWhatu1 == 14)) {
-                tvPlayer.setText("상대: 삼팔광땡!!")
+                tvPlayer.setText("상대: 삼!팔!광!땡!!")
                 ivDealerResult.setImageResource(R.drawable.loser)
                 ivPlayerResult.setImageResource(R.drawable.winner)
             } else if (playerCalc1 == playerCalc2) {
@@ -192,11 +193,15 @@ class MainActivity : AppCompatActivity() {
 
     // 이미지 회전 효과
     private fun rotateImage(image: ImageView) {
+        /*
         var DurMilliSec:Long = 150
-        image.setImageResource(R.drawable.back_128)
+        //image.setImageResource(R.drawable.back_99)
         image.animate().apply {
             duration = DurMilliSec
             rotationXBy(360f)
         }
+        */
+        val shake = AnimationUtils.loadAnimation(this, R.anim.rotate_whatu)
+        image.animation = shake
     }
 }
